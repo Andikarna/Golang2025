@@ -1,0 +1,88 @@
+definitions:
+  model.Article:
+    properties:
+      content:
+        type: string
+      desc:
+        type: string
+      id:
+        type: integer
+      title:
+        type: string
+    type: object
+  model.User:
+    properties:
+      createdDate:
+        type: string
+      email:
+        type: string
+      id:
+        type: integer
+      isActive:
+        type: boolean
+      password:
+        type: string
+      updateDate:
+        type: string
+      username:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /articles:
+    get:
+      consumes:
+      - application/json
+      description: Get details of all available articles
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.Article'
+            type: array
+      summary: Get all articles
+      tags:
+      - Articles
+    post:
+      consumes:
+      - application/json
+      description: Create a new article with title, description and content
+      parameters:
+      - description: New Article
+        in: body
+        name: article
+        required: true
+        schema:
+          $ref: '#/definitions/model.Article'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Article'
+      summary: Create a new article
+      tags:
+      - Articles
+  /users:
+    get:
+      consumes:
+      - application/json
+      description: Get details of all available articles
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.User'
+            type: array
+      summary: Get all Users
+      tags:
+      - Users
+swagger: "2.0"
