@@ -1,4 +1,56 @@
 definitions:
+  dto.LoginRequest:
+    properties:
+      email:
+        example: user@example.com
+        type: string
+      password:
+        example: password123
+        type: string
+    type: object
+  dto.LoginResponse:
+    properties:
+      token:
+        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+        type: string
+      user: {}
+    type: object
+  dto.LogoutResponse:
+    properties:
+      message:
+        example: Berhasil melakukan logout
+        type: string
+      status:
+        example: success
+        type: string
+    type: object
+  dto.RegisterRequest:
+    properties:
+      confirmPassword:
+        example: password123
+        type: string
+      email:
+        example: example@email.com
+        type: string
+      firstName:
+        example: Jhon
+        type: string
+      lastName:
+        example: Doe
+        type: string
+      password:
+        example: password123
+        type: string
+    type: object
+  dto.Response:
+    properties:
+      message:
+        example: Sucess
+        type: string
+      status:
+        example: "200"
+        type: string
+    type: object
   model.Article:
     properties:
       content:
@@ -30,6 +82,62 @@ definitions:
 info:
   contact: {}
 paths:
+  /api/login:
+    post:
+      consumes:
+      - application/json
+      description: Authentication for user
+      parameters:
+      - description: Login credentials
+        in: body
+        name: loginRequest
+        required: true
+        schema:
+          $ref: '#/definitions/dto.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Login successful
+          schema:
+            $ref: '#/definitions/dto.LoginResponse'
+      tags:
+      - Users
+  /api/logout:
+    post:
+      consumes:
+      - application/json
+      description: Logout for user
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 200, Logout Berhasil
+          schema:
+            $ref: '#/definitions/dto.LogoutResponse'
+      tags:
+      - Users
+  /api/register:
+    post:
+      consumes:
+      - application/json
+      description: Register user
+      parameters:
+      - description: Body Request
+        in: body
+        name: loginRequest
+        required: true
+        schema:
+          $ref: '#/definitions/dto.RegisterRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response'
+      tags:
+      - Users
   /articles:
     get:
       consumes:
@@ -72,7 +180,7 @@ paths:
     get:
       consumes:
       - application/json
-      description: Get details of all available articles
+      description: Get details of all available user
       produces:
       - application/json
       responses:
