@@ -26,6 +26,7 @@ func SetupRoutes() *mux.Router {
 	//Auth
 	app.HandleFunc("/api/login", handler.Login).Methods("POST")
 	app.HandleFunc("/api/logout", handler.Logout).Methods("POST")
+	app.HandleFunc("/api/refreshToken", handler.RefreshToken).Methods("POST")
 	app.HandleFunc("/api/register", handler.Register).Methods("POST")
 
 	app.Handle("/api/attendance", middleware.JWTAuth(http.HandlerFunc(handler.GetAttendance))).Methods("GET")

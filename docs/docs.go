@@ -114,6 +114,39 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/refreshToken": {
+            "post": {
+                "description": "Authentication for user",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Users"
+                ],
+                "parameters": [
+                    {
+                        "description": "Refresh Param",
+                        "name": "refreshRequest",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.RefreshRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "200, Refresh Token Berhasil",
+                        "schema": {
+                            "$ref": "#/definitions/dto.RefreshResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/api/register": {
             "post": {
                 "description": "Register user",
@@ -211,6 +244,28 @@ const docTemplate = `{
                 }
             }
         },
+        "dto.RefreshRequest": {
+            "type": "object",
+            "properties": {
+                "token": {
+                    "type": "string",
+                    "example": "efhfiasfauwkawdawkdawj"
+                }
+            }
+        },
+        "dto.RefreshResponse": {
+            "type": "object",
+            "properties": {
+                "newToken": {
+                    "type": "string",
+                    "example": "efahfywfdawhaweaakdakw"
+                },
+                "oldToken": {
+                    "type": "string",
+                    "example": "efhfiasfauwkawdawkdawj"
+                }
+            }
+        },
         "dto.RegisterRequest": {
             "type": "object",
             "properties": {
@@ -286,7 +341,7 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "userId": {
-                    "type": "string"
+                    "type": "integer"
                 }
             }
         },

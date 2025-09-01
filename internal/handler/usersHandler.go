@@ -52,7 +52,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	user, token, err := repository.Login(loginRequest.Email, loginRequest.Password)
+	user, token, refreshToken, err := repository.Login(loginRequest.Email, loginRequest.Password)
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusUnauthorized)
@@ -60,8 +60,40 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	}
 
 	response := map[string]interface{}{
-		"user":  user,
-		"token": token,
+		"user":         user,
+		"token":        token,
+		"refreshToken": refreshToken,
+	}
+
+	respondJSON(w, http.StatusOK, response)
+}
+
+// @Description Authentication for user
+// @Tags Users
+// @Accept  json
+// @Produce  json
+// @Param refreshRequest body dto.RefreshRequest true "Refresh Param"
+// @Success 200 {object} dto.RefreshResponse "200, Refresh Token Berhasil"
+// @Router /api/refreshToken [post]
+func RefreshToken(w http.ResponseWriter, r *http.Request) {
+
+	var refreshRequest dto.RefreshRequest
+
+	if err := json.NewDecoder(r.Body).Decode(&refreshRequest); err != nil {
+		http.Error(w, "Invalid request body", http.StatusBadRequest)
+		return
+	}
+
+	newToken, newRefreshToken, err := repository.RefreshToken(refreshRequest.RefreshToken)
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusUnauthorized)
+		return
+	}
+
+	response := map[string]interface{}{
+		"newToken":        newToken,
+		"newRefreshToken": newRefreshToken,
 	}
 
 	respondJSON(w, http.StatusOK, response)

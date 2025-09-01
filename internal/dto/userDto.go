@@ -5,6 +5,15 @@ type LoginRequest struct {
 	Password string `json:"password" example:"password123"`
 }
 
+type RefreshRequest struct {
+	RefreshToken string `json:"token" example:"efhfiasfauwkawdawkdawj"`
+}
+
+type RefreshResponse struct {
+	OldToken string `json:"oldToken" example:"efhfiasfauwkawdawkdawj"`
+	NewToken string `json:"newToken" example:"efahfywfdawhaweaakdakw"`
+}
+
 type LoginResponse struct {
 	User  interface{} `json:"user"`
 	Token string      `json:"token" example:"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."`

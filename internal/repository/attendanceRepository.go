@@ -17,5 +17,6 @@ func GetAttendance(userID string) ([]dto.AttendanceListResponse, error) {
 	}
 
 	result := query.Find(&attendance)
+
 	return attendance, result.Error
 }

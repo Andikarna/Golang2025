@@ -25,6 +25,21 @@ definitions:
         example: success
         type: string
     type: object
+  dto.RefreshRequest:
+    properties:
+      token:
+        example: efhfiasfauwkawdawkdawj
+        type: string
+    type: object
+  dto.RefreshResponse:
+    properties:
+      newToken:
+        example: efahfywfdawhaweaakdakw
+        type: string
+      oldToken:
+        example: efhfiasfauwkawdawkdawj
+        type: string
+    type: object
   dto.RegisterRequest:
     properties:
       confirmPassword:
@@ -77,7 +92,7 @@ definitions:
       updateDate:
         type: string
       userId:
-        type: string
+        type: integer
     type: object
   model.User:
     properties:
@@ -164,6 +179,27 @@ paths:
           description: 200, Logout Berhasil
           schema:
             $ref: '#/definitions/dto.LogoutResponse'
+      tags:
+      - Users
+  /api/refreshToken:
+    post:
+      consumes:
+      - application/json
+      description: Authentication for user
+      parameters:
+      - description: Refresh Param
+        in: body
+        name: refreshRequest
+        required: true
+        schema:
+          $ref: '#/definitions/dto.RefreshRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 200, Refresh Token Berhasil
+          schema:
+            $ref: '#/definitions/dto.RefreshResponse'
       tags:
       - Users
   /api/register:
