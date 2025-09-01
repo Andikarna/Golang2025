@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"fundamental/internal/handler"
+	"fundamental/internal/middleware"
 
 	"github.com/gorilla/mux"
 
@@ -19,9 +20,6 @@ func SetupRoutes() *mux.Router {
 		w.Write([]byte("Homepage Endpoint Hit"))
 	}).Methods("GET")
 
-	app.HandleFunc("/articles", handler.GetArticlesHandler).Methods("GET")
-	app.HandleFunc("/articles", handler.CreateArticleHandler).Methods("POST")
-
 	// Endpoint Users
 	app.HandleFunc("/users", handler.GetUsers).Methods("GET")
 
@@ -29,6 +27,8 @@ func SetupRoutes() *mux.Router {
 	app.HandleFunc("/api/login", handler.Login).Methods("POST")
 	app.HandleFunc("/api/logout", handler.Logout).Methods("POST")
 	app.HandleFunc("/api/register", handler.Register).Methods("POST")
+
+	app.Handle("/api/attendance", middleware.JWTAuth(http.HandlerFunc(handler.GetAttendance))).Methods("GET")
 
 	app.PathPrefix("/swagger/").Handler(httpSwagger.WrapHandler)
 	return app

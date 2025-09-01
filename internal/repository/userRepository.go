@@ -6,8 +6,10 @@ import (
 	"fundamental/internal/dto"
 	"fundamental/internal/model"
 	"net/http"
+	"strconv"
 	"time"
 
+	"github.com/golang-jwt/jwt/v5"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -58,8 +60,11 @@ func Login(email, password string) (*model.User, string, error) {
 		return nil, "Incorrect password", fmt.Errorf("Password Invalid")
 	}
 
-	token := generateToken(int(user.ID))
-	refreshToken := generateToken(int(user.ID))
+	//token := generateToken(int(user.ID))
+	//refreshToken := generateToken(int(user.ID))
+
+	token, err := GenerateJWT(strconv.FormatUint(uint64(user.ID), 10))
+	refreshToken, err := GenerateJWT(strconv.FormatUint(uint64(user.ID), 10))
 
 	SaveToken(user.ID, token, refreshToken)
 
@@ -119,6 +124,18 @@ func SaveToken(userID uint, accessToken, refreshToken string) error {
 func generateToken(userID int) string {
 	return fmt.Sprintf("token-%d-%d", userID, time.Now().Unix())
 }
+
+func GenerateJWT(userID string) (string, error) {
+	claims := jwt.MapClaims{
+		"user_id": userID,
+		"exp":     time.Now().Add(time.Hour * 1).Unix(), // token berlaku 1 jam
+	}
+
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	return token.SignedString(JwtKey)
+}
+
+var JwtKey = []byte("Key_DailyTask_React_Golang_2025")
 
 func HashPassword(password string) (string, error) {
 	bytes, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)

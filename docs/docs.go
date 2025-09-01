@@ -9,12 +9,56 @@ const docTemplate = `{
     "info": {
         "description": "{{escape .Description}}",
         "title": "{{.Title}}",
-        "contact": {},
+        "contact": {
+            "name": "Andi Karna",
+            "url": "http://localhost:8081",
+            "email": "youremail@example.com"
+        },
         "version": "{{.Version}}"
     },
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/api/attendance": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Get history attendance list",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Attendance"
+                ],
+                "summary": "Get attendance",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/model.Attendance"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/login": {
             "post": {
                 "description": "Authentication for user",
@@ -98,64 +142,6 @@ const docTemplate = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/dto.Response"
-                        }
-                    }
-                }
-            }
-        },
-        "/articles": {
-            "get": {
-                "description": "Get details of all available articles",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Articles"
-                ],
-                "summary": "Get all articles",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/model.Article"
-                            }
-                        }
-                    }
-                }
-            },
-            "post": {
-                "description": "Create a new article with title, description and content",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Articles"
-                ],
-                "summary": "Create a new article",
-                "parameters": [
-                    {
-                        "description": "New Article",
-                        "name": "article",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/model.Article"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/model.Article"
                         }
                     }
                 }
@@ -263,19 +249,43 @@ const docTemplate = `{
                 }
             }
         },
-        "model.Article": {
+        "model.Attendance": {
             "type": "object",
             "properties": {
-                "content": {
+                "checkIn": {
                     "type": "string"
                 },
-                "desc": {
+                "checkOut": {
+                    "type": "string"
+                },
+                "createdById": {
+                    "type": "integer"
+                },
+                "createdDate": {
+                    "type": "string"
+                },
+                "date": {
+                    "type": "string"
+                },
+                "description": {
                     "type": "string"
                 },
                 "id": {
                     "type": "integer"
                 },
-                "title": {
+                "status": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                },
+                "updateById": {
+                    "type": "integer"
+                },
+                "updateDate": {
+                    "type": "string"
+                },
+                "userId": {
                     "type": "string"
                 }
             }
@@ -306,17 +316,24 @@ const docTemplate = `{
                 }
             }
         }
+    },
+    "securityDefinitions": {
+        "BearerAuth": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
+        }
     }
 }`
 
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
-	Version:          "",
-	Host:             "",
-	BasePath:         "",
+	Version:          "1.0",
+	Host:             "localhost:8081",
+	BasePath:         "/",
 	Schemes:          []string{},
-	Title:            "",
-	Description:      "",
+	Title:            "Fundamental API",
+	Description:      "API documentation with JWT Auth",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 	LeftDelim:        "{{",

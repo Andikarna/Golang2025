@@ -1,3 +1,4 @@
+basePath: /
 definitions:
   dto.LoginRequest:
     properties:
@@ -51,15 +52,31 @@ definitions:
         example: "200"
         type: string
     type: object
-  model.Article:
+  model.Attendance:
     properties:
-      content:
+      checkIn:
         type: string
-      desc:
+      checkOut:
+        type: string
+      createdById:
+        type: integer
+      createdDate:
+        type: string
+      date:
+        type: string
+      description:
         type: string
       id:
         type: integer
-      title:
+      status:
+        type: string
+      type:
+        type: string
+      updateById:
+        type: integer
+      updateDate:
+        type: string
+      userId:
         type: string
     type: object
   model.User:
@@ -79,9 +96,41 @@ definitions:
       username:
         type: string
     type: object
+host: localhost:8081
 info:
-  contact: {}
+  contact:
+    email: youremail@example.com
+    name: Andi Karna
+    url: http://localhost:8081
+  description: API documentation with JWT Auth
+  title: Fundamental API
+  version: "1.0"
 paths:
+  /api/attendance:
+    get:
+      consumes:
+      - application/json
+      description: Get history attendance list
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.Attendance'
+            type: array
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Get attendance
+      tags:
+      - Attendance
   /api/login:
     post:
       consumes:
@@ -138,44 +187,6 @@ paths:
             $ref: '#/definitions/dto.Response'
       tags:
       - Users
-  /articles:
-    get:
-      consumes:
-      - application/json
-      description: Get details of all available articles
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/model.Article'
-            type: array
-      summary: Get all articles
-      tags:
-      - Articles
-    post:
-      consumes:
-      - application/json
-      description: Create a new article with title, description and content
-      parameters:
-      - description: New Article
-        in: body
-        name: article
-        required: true
-        schema:
-          $ref: '#/definitions/model.Article'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/model.Article'
-      summary: Create a new article
-      tags:
-      - Articles
   /users:
     get:
       consumes:
@@ -193,4 +204,9 @@ paths:
       summary: Get all Users
       tags:
       - Users
+securityDefinitions:
+  BearerAuth:
+    in: header
+    name: Authorization
+    type: apiKey
 swagger: "2.0"
